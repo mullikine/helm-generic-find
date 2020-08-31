@@ -1,4 +1,4 @@
-;;; helm-fzf.el --- helm binding for FZF
+;;; helm-generic-find.el --- helm binding for FZF
 
 ;; Copyright (C) 2011 Free Software Foundation, Inc.
 
@@ -17,32 +17,32 @@
 (require 's)
 (require 'dash)
 
-(defcustom helm-fzf-executable "fzf"
+(defcustom helm-generic-find-executable "fzf"
   "Default executable for fzf"
   :type 'stringp
-  :group 'helm-fzf)
+  :group 'helm-generic-find)
 
-(defun helm-fzf--project-root ()
+(defun helm-generic-find--project-root ()
   (cl-loop for dir in '(".git/" ".hg/" ".svn/" ".git")
            when (locate-dominating-file default-directory dir)
            return it))
 
-(defset helm-fzf-source
+(defset helm-generic-find-source
   (helm-build-async-source "fzf"
-    :candidates-process 'helm-fzf--do-candidate-process
+    :candidates-process 'helm-generic-find--do-candidate-process
     :filter-one-by-one 'identity
     ;; Don't let there be a minimum. it's annoying
     :requires-pattern 0
     :action 'helm-find-file-or-marked
     :candidate-number-limit 9999))
 
-(defun helm-fzf--do-candidate-process ()
-  (let* ((cmd-args (-filter 'identity (list helm-fzf-executable
+(defun helm-generic-find--do-candidate-process ()
+  (let* ((cmd-args (-filter 'identity (list helm-generic-find-executable
                                             "--tac"
                                             "--no-sort"
                                             "-f"
                                             helm-pattern)))
-         (proc (apply 'start-file-process "helm-fzf" helm-buffer cmd-args)))
+         (proc (apply 'start-file-process "helm-generic-find" helm-buffer cmd-args)))
     (prog1 proc
       (set-process-sentinel
        (get-buffer-process helm-buffer)
@@ -51,20 +51,20 @@
           process event (helm-default-directory)))))))
 
 ;;;###autoload
-(defun helm-fzf (directory)
+(defun helm-generic-find (directory)
   (interactive "D")
   (let ((default-directory directory))
-    (helm :sources '(helm-fzf-source)
-          :buffer "*helm-fzf*")))
+    (helm :sources '(helm-generic-find-source)
+          :buffer "*helm-generic-find*")))
 
-(defun helm-fzf-project-root ()
+(defun helm-generic-find-project-root ()
   (interactive)
-  (let ((default-directory (helm-fzf--project-root)))
+  (let ((default-directory (helm-generic-find--project-root)))
     (unless default-directory
       (error "Could not find the project root."))
-    (helm :sources '(helm-fzf-source)
-          :buffer "*helm-fzf*")))
+    (helm :sources '(helm-generic-find-source)
+          :buffer "*helm-generic-find*")))
 
-(provide 'helm-fzf)
+(provide 'helm-generic-find)
 
-;;; helm-fzf.el ends here
+;;; helm-generic-find.el ends here
