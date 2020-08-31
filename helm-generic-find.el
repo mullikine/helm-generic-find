@@ -1,17 +1,3 @@
-;;; helm-generic-find.el --- helm binding for FZF
-
-;; Copyright (C) 2011 Free Software Foundation, Inc.
-
-;; Author: Ivan Buda Mandura (ivan.mandura93@gmail.com)
-
-;; Version: 0.1
-;; Package-Requires: ((emacs "24.4"))
-;; Keywords: helm fzf
-
-;;; Commentary:
-
-;;; Code:
-
 (require 'helm)
 (require 'helm-files)
 (require 's)
@@ -21,11 +7,6 @@
   "Default executable for fzf"
   :type 'stringp
   :group 'helm-generic-find)
-
-(defun helm-generic-find--project-root ()
-  (cl-loop for dir in '(".git/" ".hg/" ".svn/" ".git")
-           when (locate-dominating-file default-directory dir)
-           return it))
 
 (defset helm-generic-find-source
   (helm-build-async-source "fzf"
@@ -57,14 +38,4 @@
     (helm :sources '(helm-generic-find-source)
           :buffer "*helm-generic-find*")))
 
-(defun helm-generic-find-project-root ()
-  (interactive)
-  (let ((default-directory (helm-generic-find--project-root)))
-    (unless default-directory
-      (error "Could not find the project root."))
-    (helm :sources '(helm-generic-find-source)
-          :buffer "*helm-generic-find*")))
-
 (provide 'helm-generic-find)
-
-;;; helm-generic-find.el ends here
