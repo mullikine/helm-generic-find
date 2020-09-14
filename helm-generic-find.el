@@ -12,11 +12,13 @@
 
 ;;;###autoload
 (defun helm-generic-find (cmd)
-  (interactive "D")
-  (let* ((default-directory directory)
-        (generic-find-cmd cmd)
-        (generic-find-cmd-slug (slugify-cmd)))
-    (helm :sources (list (helm-build-async-source "generic find"
+  (interactive (list (read-string-hist "cmd: ")))
+  (let* ((default-directory (pwd))
+         (generic-find-cmd cmd)
+         (generic-find-cmd-slug (slugify cmd))
+         (generic-find-source-name (concat "helm generic " generic-find-cmd-slug))
+         (generic-find-buffer-name (concat "*helm-" generic-find-cmd-slug "*")))
+    (helm :sources (list (helm-build-async-source generic-find-source-name
                            :candidates-process (defun helm-generic-find--do-candidate-process ()
                                                  (let* ((cmd-args (-filter 'identity
                                                                            (nconc (cmd2list (helm-generic-cmd))
@@ -36,6 +38,6 @@
                            :requires-pattern 0
                            :action 'helm-find-file-or-marked
                            :candidate-number-limit 9999))
-          :buffer "*helm-generic-find*")))
+          :buffer generic-find-buffer-name)))
 
 (provide 'helm-generic-find)
