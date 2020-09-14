@@ -3,7 +3,9 @@
 (require 's)
 (require 'dash)
 
-;; The aim of this is to be able to instantiate a helm with a custom backend command
+;; The aim of this is to be able to
+;; instantiate a helm with a custom backend
+;; command
 
 (defcustom helm-generic-find-cmd "echo yo"
   "Default executable for fzf"
@@ -34,9 +36,10 @@
           process event (helm-default-directory)))))))
 
 ;;;###autoload
-(defun helm-generic-find (directory)
+(defun helm-generic-find (cmd &optional directory)
   (interactive "D")
-  (let ((default-directory directory))
+  (let ((default-directory directory)
+        (cmd cmd))
     (helm :sources '(helm-generic-find-source)
           :buffer "*helm-generic-find*")))
 
