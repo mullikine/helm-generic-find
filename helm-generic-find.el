@@ -18,11 +18,10 @@
     :candidate-number-limit 9999))
 
 (defun helm-generic-find--do-candidate-process ()
-  (let* ((cmd-args (-filter 'identity (list helm-generic-find-executable
-                                            "--tac"
-                                            "--no-sort"
-                                            "-f"
-                                            helm-pattern)))
+  (let* ((cmd-args (-filter 'identity (nconc (cmd2list helm-generic-find-executable)
+                                             (list
+                                              ;; Pattern is provided by helm when the function is run
+                                              helm-pattern))))
          (proc (apply 'start-file-process "helm-generic-find" helm-buffer cmd-args)))
     (prog1 proc
       (set-process-sentinel
