@@ -19,8 +19,8 @@
     (helm :sources (list (helm-build-async-source generic-find-source-name
                            :candidates-process (defun helm-generic-find--do-candidate-process ()
                                                  (let* ((cmd-args (-filter 'identity
-                                                                           (nconc (cmd2list ;; (buffer-local-value 'generic-find-cmd (get-buffer helm-buffer))
-                                                                                   "fzf -f")
+                                                                           (nconc (cmd2list
+                                                                                   (buffer-local-value 'generic-find-cmd (get-buffer helm-buffer)))
                                                                                   (list
                                                                                    ;; Pattern is provided by helm when the function is run
                                                                                    helm-pattern))))
