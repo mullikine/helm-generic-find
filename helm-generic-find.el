@@ -13,7 +13,8 @@
   :group 'helm-generic-find)
 
 (defset helm-generic-find-source
-  (helm-build-async-source "fzf"
+  ;; generic find === name
+  (helm-build-async-source "generic find"
     :candidates-process 'helm-generic-find--do-candidate-process
     :filter-one-by-one 'identity
     ;; Don't let there be a minimum. it's annoying
@@ -27,7 +28,8 @@
                                    (list
                                     ;; Pattern is provided by helm when the function is run
                                     helm-pattern))))
-         (proc (apply 'start-file-process "helm-generic-find" helm-buffer cmd-args)))
+         ;; helm generic find process === name
+         (proc (apply 'start-file-process "helm generic find process" helm-buffer cmd-args)))
     (prog1 proc
       (set-process-sentinel
        (get-buffer-process helm-buffer)
