@@ -10,7 +10,7 @@
 (defun helm-generic-find (cmd &optional action)
   (interactive (list (read-string-hist "cmd: ")))
   (if (not action) (setq action 'helm-find-file-or-marked))
-  (let* ((default-directory (pwd))
+  (let* ((default-directory (my/pwd))
          (generic-find-cmd cmd)
          (generic-find-cmd-slug (slugify cmd))
          (generic-find-source-name (concat "helm generic " generic-find-cmd-slug))
@@ -19,7 +19,8 @@
     (helm :sources (list (helm-build-async-source generic-find-source-name
                            :candidates-process (defun helm-generic-find--do-candidate-process ()
                                                  (let* ((cmd-args (-filter 'identity
-                                                                           (nconc (cmd2list (buffer-local-value 'generic-find-cmd (get-buffer helm-buffer)))
+                                                                           (nconc (cmd2list ;; (buffer-local-value 'generic-find-cmd (get-buffer helm-buffer))
+                                                                                   "fzf -f")
                                                                                   (list
                                                                                    ;; Pattern is provided by helm when the function is run
                                                                                    helm-pattern))))
