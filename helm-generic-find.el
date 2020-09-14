@@ -3,6 +3,8 @@
 (require 's)
 (require 'dash)
 
+;; The aim of this is to be able to instantiate a helm with a custom backend command
+
 (defcustom helm-generic-find-cmd "echo yo"
   "Default executable for fzf"
   :type 'stringp
