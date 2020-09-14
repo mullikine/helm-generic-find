@@ -14,6 +14,7 @@
          (generic-find-cmd cmd)
          (generic-find-cmd-slug (slugify cmd))
          (generic-find-source-name (concat "helm generic " generic-find-cmd-slug))
+         (generic-find-func-name (concat "helm-generic-" generic-find-cmd-slug "--do-candidate-process"))
          (generic-find-process-name (concat "helm generic " generic-find-cmd-slug " proc"))
          (generic-find-buffer-name (concat "*helm-" generic-find-cmd-slug "*")))
     (helm :sources (list (helm-build-async-source generic-find-source-name
