@@ -3,7 +3,7 @@
 (require 's)
 (require 'dash)
 
-(defcustom helm-generic-find-cmd "fzf"
+(defcustom helm-generic-find-cmd "echo yo"
   "Default executable for fzf"
   :type 'stringp
   :group 'helm-generic-find)
@@ -18,10 +18,11 @@
     :candidate-number-limit 9999))
 
 (defun helm-generic-find--do-candidate-process ()
-  (let* ((cmd-args (-filter 'identity (nconc (cmd2list helm-generic-find-cmd)
-                                             (list
-                                              ;; Pattern is provided by helm when the function is run
-                                              helm-pattern))))
+  (let* ((cmd-args (-filter 'identity
+                            (nconc (cmd2list helm-generic-find-cmd)
+                                   (list
+                                    ;; Pattern is provided by helm when the function is run
+                                    helm-pattern))))
          (proc (apply 'start-file-process "helm-generic-find" helm-buffer cmd-args)))
     (prog1 proc
       (set-process-sentinel
