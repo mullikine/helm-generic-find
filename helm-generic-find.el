@@ -11,12 +11,14 @@
   (buffer-local-value 'generic-find-cmd (get-buffer helm-buffer)))
 
 ;;;###autoload
-(defun helm-generic-find (cmd)
+(defun helm-generic-find (cmd &optional action)
   (interactive (list (read-string-hist "cmd: ")))
+  (if (not action) (setq action 'helm-find-file-or-marked))
   (let* ((default-directory (pwd))
          (generic-find-cmd cmd)
          (generic-find-cmd-slug (slugify cmd))
          (generic-find-source-name (concat "helm generic " generic-find-cmd-slug))
+         (generic-find-process-name (concat "helm generic " generic-find-cmd-slug " proc"))
          (generic-find-buffer-name (concat "*helm-" generic-find-cmd-slug "*")))
     (helm :sources (list (helm-build-async-source generic-find-source-name
                            :candidates-process (defun helm-generic-find--do-candidate-process ()
@@ -25,8 +27,7 @@
                                                                                   (list
                                                                                    ;; Pattern is provided by helm when the function is run
                                                                                    helm-pattern))))
-                                                        ;; helm generic find process === name
-                                                        (proc (apply 'start-file-process "helm generic find process" helm-buffer cmd-args)))
+                                                        (proc (apply 'start-file-process generic-find-process-name helm-buffer cmd-args)))
                                                    (prog1 proc
                                                      (set-process-sentinel
                                                       (get-buffer-process helm-buffer)
@@ -36,7 +37,7 @@
                            :filter-one-by-one 'identity
                            ;; Don't let there be a minimum. it's annoying
                            :requires-pattern 0
-                           :action 'helm-find-file-or-marked
+                           :action action
                            :candidate-number-limit 9999))
           :buffer generic-find-buffer-name)))
 
