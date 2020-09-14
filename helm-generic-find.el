@@ -7,10 +7,6 @@
 ;; instantiate a helm with a custom backend
 ;; command
 
-(defun helm-generic-cmd ()
-  (buffer-local-value 'generic-find-cmd (get-buffer helm-buffer)))
-
-;;;###autoload
 (defun helm-generic-find (cmd &optional action)
   (interactive (list (read-string-hist "cmd: ")))
   (if (not action) (setq action 'helm-find-file-or-marked))
@@ -23,7 +19,7 @@
     (helm :sources (list (helm-build-async-source generic-find-source-name
                            :candidates-process (defun helm-generic-find--do-candidate-process ()
                                                  (let* ((cmd-args (-filter 'identity
-                                                                           (nconc (cmd2list (helm-generic-cmd))
+                                                                           (nconc (cmd2list (buffer-local-value 'generic-find-cmd (get-buffer helm-buffer)))
                                                                                   (list
                                                                                    ;; Pattern is provided by helm when the function is run
                                                                                    helm-pattern))))
